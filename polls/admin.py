@@ -20,9 +20,16 @@ class AnswerInline(SortableInlineAdminMixin, admin.TabularInline):
 
 @admin.register(polls.models.Question)
 class QuestionAdmin(SortableAdminBase, admin.ModelAdmin):
+    search_fields = ['text']
     inlines = [AnswerInline]
 
 
+class QuestionInline(SortableInlineAdminMixin, admin.TabularInline):
+    model = polls.models.PollQuestionM2m
+    extra = 0
+    autocomplete_fields = ['question']
+    fields = ['question', 'order']
+
 @admin.register(polls.models.Poll)
-class PollAdmin(admin.ModelAdmin):
-    pass
+class PollAdmin(SortableAdminBase, admin.ModelAdmin):
+    inlines = [QuestionInline]

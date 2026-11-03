@@ -5,7 +5,8 @@ from django.db import models
 class Answer(models.Model):
     """ Вариант ответа """
     text = models.CharField(verbose_name='текст ответа', max_length=1024)
-
+    # пока решил, что если ответа нет ни в одном вопросе, то он кастомный
+    # custom = models.BooleanField(default=False)
 
     def __str__(self) -> str:
         return self.text
@@ -20,29 +21,49 @@ class Question(models.Model):
         related_name='answers'
     )
 
-    def __str__(self) -> str:
-        return self.text
-
     class Meta:
         verbose_name = 'Вопрос'
         verbose_name_plural = 'Вопросы'
 
-
-class UserAnswer(models.Model):
-    """ Ответ пользователя """
-    question = models.ForeignKey(Question, verbose_name='Вопрос', on_delete=models.CASCADE)
-    answer = models.ForeignKey(Answer, verbose_name='Вариант ответа', on_delete=models.CASCADE, null=True, blank=True)
-
-
-class Poll(models.Model):
-    """ Шаблон опроса """
-    questions = models.ManyToManyField(Question, verbose_name='Вопросы')
-    answers = models.ManyToManyField(Answer, verbose_name='Варианты ответов')
+    def __str__(self) -> str:
+        return self.text
 
 
 class Session(models.Model):
     """ Сессия прохождения опроса """
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    start_time = models.DateTimeField(auto_now_add=True)
+    #TODO: Время завершения прохождения?
+
+    class Meta:
+        verbose_name = 'Сессия прохождения'
+        verbose_name_plural = 'Сессии прохождения'
+
+
+class UserAnswer(models.Model):
+    """ Ответ пользователя """
+    # Возможно тут можно было бы избежать указания question, изменив схему моделей: прявязать к Answer ForeignKey Question
+    # Но я намеренно решил привязывать именно ответы к вопросам. Так как один ответ, может соответствовать разным вопросам.
+    # Например "да", "нет". Так же в этой схеме проще будет реализовать кастомные ответы пользователя
+    question = models.ForeignKey(Question, verbose_name='Вопрос', on_delete=models.CASCADE)
+    answer = models.ForeignKey(Answer, verbose_name='Вариант ответа', on_delete=models.CASCADE, null=True, blank=True)
+    session = models.ForeignKey(Session, verbose_name='Сессия прохождения', on_delete=models.CASCADE)
+
+
+class Poll(models.Model):
+    """ Шаблон опроса """
+    name = models.CharField(
+        verbose_name='Название',
+        max_length=255
+    )
+    questions = models.ManyToManyField(Question, verbose_name='Вопросы', through='PollQuestionM2m')
+
+    class Meta:
+        verbose_name = 'Шаблон опроса'
+        verbose_name_plural = 'Шаблоны опроса'
+
+    def __str__(self) -> str:
+        return self.name
 
 
 class QuestionAnswerM2m(models.Model):
@@ -61,3 +82,20 @@ class QuestionAnswerM2m(models.Model):
 
     def __str__(self):
         return self.answer.text
+
+
+class PollQuestionM2m(models.Model):
+    """ То же самое что и у QuestionAnswerM2m """
+
+    poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    order = models.PositiveIntegerField(default=0, db_index=True)
+
+    class Meta:
+        ordering = ['order']
+        unique_together = ['question', 'poll']
+        verbose_name = 'Вопрос'
+        verbose_name_plural = 'Вопросы'
+
+    def __str__(self) -> str:
+        return self.question.text
