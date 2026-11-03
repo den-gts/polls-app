@@ -34,10 +34,34 @@ class Session(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     start_time = models.DateTimeField(auto_now_add=True)
     #TODO: Время завершения прохождения?
+    current_question = models.ForeignKey(
+        Question,
+        verbose_name='Текущий вопрос',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
+    poll = models.ForeignKey('Poll', on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = 'Сессия прохождения'
         verbose_name_plural = 'Сессии прохождения'
+
+    def save(self, *args, **kwargs):
+        if not self.pk is None:
+            self.current_question = self.poll.questions.first()
+        super(*args, **kwargs)
+
+    def set_next_question(self):
+        current_index = PollQuestionM2m.objects.get(
+            poll = self.poll,
+            question=self.current_question
+        ).order
+        next_question = PollQuestionM2m.objects.filter(
+            poll = self.poll,
+            order_gt=current_index
+        ).order_by('order').first()
+        return next_question
 
 
 class UserAnswer(models.Model):
@@ -57,6 +81,7 @@ class Poll(models.Model):
         max_length=255
     )
     questions = models.ManyToManyField(Question, verbose_name='Вопросы', through='PollQuestionM2m')
+    archive = models.BooleanField(default=False, verbose_name='Архивный?')
 
     class Meta:
         verbose_name = 'Шаблон опроса'
