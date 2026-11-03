@@ -17,14 +17,21 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from rest_framework.routers import DefaultRouter
+from rest_framework_nested.routers import NestedDefaultRouter
 
 from polls import views
 
 router = DefaultRouter()
-router.register(r'polls', views.PollViewSet)
+router.register('polls', views.PollViewSet)
+questions_router = NestedDefaultRouter(router, 'polls', lookup='poll')
+questions_router.register('questions', views.QuestionViewSet, basename='poll-questions')
+answer_router = NestedDefaultRouter(questions_router, 'questions', lookup='question')
+answer_router.register('answer', views.AnswerViewSet, basename='question-answers')
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('health/', views.health_check, name='health_check')
 ]
 
 urlpatterns += router.urls
+urlpatterns += questions_router.urls
+urlpatterns += answer_router.urls

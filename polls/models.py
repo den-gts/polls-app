@@ -11,6 +11,10 @@ class Answer(models.Model):
     def __str__(self) -> str:
         return self.text
 
+    class Meta:
+        verbose_name = 'Ответ'
+        verbose_name_plural = 'Ответы'
+
 
 class Question(models.Model):
     text = models.CharField(verbose_name='текст вопроса', max_length=2048)
@@ -20,6 +24,7 @@ class Question(models.Model):
         through='QuestionAnswerM2m',
         related_name='answers'
     )
+    allow_custom = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = 'Вопрос'
@@ -48,20 +53,23 @@ class Session(models.Model):
         verbose_name_plural = 'Сессии прохождения'
 
     def save(self, *args, **kwargs):
-        if not self.pk is None:
+        if self.pk is None:
             self.current_question = self.poll.questions.first()
-        super(*args, **kwargs)
+        super().save(*args, **kwargs)
 
-    def set_next_question(self):
+    @property
+    def next_question(self) -> Question | None:
         current_index = PollQuestionM2m.objects.get(
             poll = self.poll,
             question=self.current_question
         ).order
-        next_question = PollQuestionM2m.objects.filter(
+        next_pq = PollQuestionM2m.objects.filter(
             poll = self.poll,
-            order_gt=current_index
+            order__gt=current_index
         ).order_by('order').first()
-        return next_question
+        if not next_pq:
+            return None
+        return next_pq.question
 
 
 class UserAnswer(models.Model):
@@ -72,6 +80,10 @@ class UserAnswer(models.Model):
     question = models.ForeignKey(Question, verbose_name='Вопрос', on_delete=models.CASCADE)
     answer = models.ForeignKey(Answer, verbose_name='Вариант ответа', on_delete=models.CASCADE, null=True, blank=True)
     session = models.ForeignKey(Session, verbose_name='Сессия прохождения', on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name = 'Ответ пользователя'
+        verbose_name_plural = 'Ответы пользователя'
 
 
 class Poll(models.Model):

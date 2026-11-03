@@ -30,6 +30,26 @@ class QuestionInline(SortableInlineAdminMixin, admin.TabularInline):
     autocomplete_fields = ['question']
     fields = ['question', 'order']
 
+
 @admin.register(polls.models.Poll)
 class PollAdmin(SortableAdminBase, admin.ModelAdmin):
     inlines = [QuestionInline]
+
+
+@admin.register(polls.models.Session)
+class SessionAdmin(admin.ModelAdmin):
+    pass
+
+@admin.register(polls.models.UserAnswer)
+class UserAnswerAdmin(admin.ModelAdmin):
+    list_display = ['id', 'get_session_user', 'question', 'answer']  # Указываем имя метода
+
+    @admin.display(description='Пользователь', ordering='session__user')
+    def get_session_user(self, obj):
+        if obj.session and obj.session.user:
+            return str(obj.session.user)
+        return "—"
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.select_related('session__user')

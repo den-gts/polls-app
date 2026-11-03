@@ -1,4 +1,5 @@
 from rest_framework import serializers
+
 from polls import models
 
 
@@ -12,28 +13,23 @@ class QuestionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Question
-        fields = '__all__'
+        exclude = ['answers']
 
 
-
-class PollSerializer(serializers.ModelSerializer):
+class PollListSerializer(serializers.ModelSerializer):
     question_count = serializers.SerializerMethodField()
 
     class Meta:
         model = models.Poll
-        fields = ['name', 'question_count']
+        fields = ['id', 'name', 'question_count']
 
     def get_question_count(self, instance: models.Poll):
         return instance.questions.count()
 
 
-class SessionSerializer(serializers.ModelSerializer):
-    name = serializers.SlugRelatedField(
-        source='poll',
-        slug_field='name',
-        read_only=True
-    )
+class AnswerSerializer(serializers.ModelSerializer):
+    text = serializers.CharField(max_length=2048, required=False)
 
     class Meta:
-        model = models.Session
-        fields = ['poll']
+        model = models.UserAnswer
+        fields =['answer', 'text']

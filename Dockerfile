@@ -5,6 +5,6 @@ RUN pip install uv
 WORKDIR /app
 ENV UV_PROJECT_ENVIRONMENT=/usr/local
 COPY pyproject.toml uv.lock ./
-RUN uv sync  --frozen --no-dev
+RUN uv sync --frozen
 COPY . .
 CMD ["uv", "run", "gunicorn", "config.wsgi:application", "-user-bind", "0.0.0.0:8000", "--workers", "4"]
