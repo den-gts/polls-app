@@ -21,5 +21,5 @@ from polls.views import health_check
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('health/', health_check)
+    path('health/', health_check, name='health_check')
 ]
