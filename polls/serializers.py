@@ -5,7 +5,9 @@ from polls import models
 
 class QuestionSerializer(serializers.ModelSerializer):
     available_answers = serializers.SlugRelatedField(
-        many=True,
+        many=True, # Да, понимаю, что SlugRelatedField c many=True может привести к n+1,
+        # если решу использовать List в QuestionViewSet. Но я целенаправленно пока запретил. Потому, что не думал, что это
+        # понадобится в UI. Не планировал нигде отображать список вопросов.
         source='answers',
         slug_field='text',
         read_only=True

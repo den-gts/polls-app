@@ -1,12 +1,10 @@
-import pprint
-
 import pytest
 from django.urls import reverse
 from rest_framework import status
-from rest_framework.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST
+from rest_framework.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST, HTTP_200_OK
 from rest_framework.test import APIClient
-from polls.factories import UserFactory, PollFactory
-from polls.models import Poll, Question, UserAnswer
+from polls.factories import UserFactory, PollFactory, QuestionFactory, AnswerFactory
+from polls.models import Poll, UserAnswer, Question
 
 
 @pytest.fixture
@@ -36,7 +34,6 @@ def test_health_check(api_client):
     assert response.status_code == status.HTTP_200_OK
 
 class TestAnswerView:
-
 
     @staticmethod
     def test_answer_submit(api_client, user, polls: list[Poll]):
@@ -110,3 +107,30 @@ class TestAnswerView:
 
         assert response.status_code == HTTP_201_CREATED, response.json()
         assert UserAnswer.objects.get(session__poll=poll, question=question, answer__text='какой-то ответ')
+
+
+# А еще можно было бы подключить django-zeal
+class TestNPlusOne:
+    @pytest.mark.parametrize("n", [1, 5, 50])
+    def test_list_polls(self, api_client, django_assert_num_queries, user, n):
+        PollFactory.create_batch(n)
+        api_client.force_authenticate(user)
+        with django_assert_num_queries(1):
+            response = api_client.get(reverse('poll-list'))
+            assert response.status_code == HTTP_200_OK
+
+    # А вдруг? Рассуждения в polls/serializers.py:8 навели на мысли
+    @pytest.mark.parametrize("n", [1, 5, 50])
+    def test_question_detail(self, api_client, django_assert_num_queries, user, n, poll):
+        # для одного теста не хочу ближайшие 3 строки в фикстуру складывать
+        answers = AnswerFactory.create_batch(n)
+        question = poll.questions.first()
+        question.answers.set(answers)
+
+        api_client.force_authenticate(user)
+        with django_assert_num_queries(2): # в таблицу question + таблицу answer
+            response = api_client.get(reverse('poll-questions-detail', kwargs={
+                'poll_pk': poll.pk,
+                'pk': question.pk
+            }))
+            assert response.status_code == HTTP_200_OK

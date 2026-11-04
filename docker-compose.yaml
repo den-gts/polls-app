@@ -35,11 +35,12 @@ services:
     depends_on:
       db:
         condition: service_healthy
-      migrate:
+      init:
         condition: service_completed_successfully
   # Что бы не держать в голове про применение миграций. Ну и заодно и статику при первом запуске, чтоб 2 раза не вставать
   # будкем на каждый docker compose up запускать применение миграций и создание статики. Они иденпотенты.
-  migrate:
+  init:
+
     build: .
     command: >
       sh -c " uv run python manage.py migrate &&

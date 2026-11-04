@@ -62,6 +62,8 @@ class Session(models.Model):
     def next_question(self) -> Question | None:
         if not self.current_question:
             return None
+        # TODO: Быть осторожным, если придется выводить next_question в списке из сессий. А то будет n+1.
+        #  Вообще жаль, что я не добрался до Ui
         current_index = PollQuestionM2m.objects.get(
             poll = self.poll,
             question=self.current_question
