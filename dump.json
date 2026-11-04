@@ -1,0 +1,358 @@
+[
+{
+    "model": "polls.answer",
+    "pk": 1,
+    "fields": {
+        "text": "BMW"
+    }
+},
+{
+    "model": "polls.answer",
+    "pk": 2,
+    "fields": {
+        "text": "Audi"
+    }
+},
+{
+    "model": "polls.answer",
+    "pk": 3,
+    "fields": {
+        "text": "Лада"
+    }
+},
+{
+    "model": "polls.answer",
+    "pk": 4,
+    "fields": {
+        "text": "Toyota"
+    }
+},
+{
+    "model": "polls.answer",
+    "pk": 5,
+    "fields": {
+        "text": "Синий"
+    }
+},
+{
+    "model": "polls.answer",
+    "pk": 6,
+    "fields": {
+        "text": "Красный"
+    }
+},
+{
+    "model": "polls.answer",
+    "pk": 7,
+    "fields": {
+        "text": "Желтый"
+    }
+},
+{
+    "model": "polls.answer",
+    "pk": 8,
+    "fields": {
+        "text": "Кола"
+    }
+},
+{
+    "model": "polls.answer",
+    "pk": 9,
+    "fields": {
+        "text": "Кампот"
+    }
+},
+{
+    "model": "polls.answer",
+    "pk": 10,
+    "fields": {
+        "text": "Морс"
+    }
+},
+{
+    "model": "polls.answer",
+    "pk": 11,
+    "fields": {
+        "text": "Кофе"
+    }
+},
+{
+    "model": "polls.question",
+    "pk": 1,
+    "fields": {
+        "text": "Какой у вас автомобиль?",
+        "allow_custom": false
+    }
+},
+{
+    "model": "polls.question",
+    "pk": 2,
+    "fields": {
+        "text": "Какого цвета у вас автомобиль?",
+        "allow_custom": false
+    }
+},
+{
+    "model": "polls.question",
+    "pk": 3,
+    "fields": {
+        "text": "Ваше любимое блюдо?",
+        "allow_custom": true
+    }
+},
+{
+    "model": "polls.question",
+    "pk": 4,
+    "fields": {
+        "text": "Ваш любимый напиток?",
+        "allow_custom": false
+    }
+},
+{
+    "model": "polls.session",
+    "pk": 4,
+    "fields": {
+        "user": [
+            "admin"
+        ],
+        "start_time": "2026-11-04T15:51:03.681Z",
+        "current_question": null,
+        "poll": 1
+    }
+},
+{
+    "model": "polls.session",
+    "pk": 5,
+    "fields": {
+        "user": [
+            "admin"
+        ],
+        "start_time": "2026-11-04T16:13:33.597Z",
+        "current_question": 3,
+        "poll": 2
+    }
+},
+{
+    "model": "polls.useranswer",
+    "pk": 12,
+    "fields": {
+        "question": 1,
+        "answer": 1,
+        "session": 4
+    }
+},
+{
+    "model": "polls.useranswer",
+    "pk": 13,
+    "fields": {
+        "question": 1,
+        "answer": 1,
+        "session": 4
+    }
+},
+{
+    "model": "polls.useranswer",
+    "pk": 14,
+    "fields": {
+        "question": 1,
+        "answer": 1,
+        "session": 4
+    }
+},
+{
+    "model": "polls.useranswer",
+    "pk": 15,
+    "fields": {
+        "question": 2,
+        "answer": 1,
+        "session": 4
+    }
+},
+{
+    "model": "polls.useranswer",
+    "pk": 16,
+    "fields": {
+        "question": 1,
+        "answer": 2,
+        "session": 4
+    }
+},
+{
+    "model": "polls.useranswer",
+    "pk": 17,
+    "fields": {
+        "question": 1,
+        "answer": 2,
+        "session": 4
+    }
+},
+{
+    "model": "polls.useranswer",
+    "pk": 18,
+    "fields": {
+        "question": 2,
+        "answer": 2,
+        "session": 4
+    }
+},
+{
+    "model": "polls.useranswer",
+    "pk": 19,
+    "fields": {
+        "question": 1,
+        "answer": 2,
+        "session": 5
+    }
+},
+{
+    "model": "polls.poll",
+    "pk": 1,
+    "fields": {
+        "name": "Про автомобили",
+        "archive": false
+    }
+},
+{
+    "model": "polls.poll",
+    "pk": 2,
+    "fields": {
+        "name": "Про еду",
+        "archive": false
+    }
+},
+{
+    "model": "polls.questionanswerm2m",
+    "pk": 1,
+    "fields": {
+        "question": 1,
+        "answer": 1,
+        "order": 2
+    }
+},
+{
+    "model": "polls.questionanswerm2m",
+    "pk": 2,
+    "fields": {
+        "question": 1,
+        "answer": 2,
+        "order": 3
+    }
+},
+{
+    "model": "polls.questionanswerm2m",
+    "pk": 3,
+    "fields": {
+        "question": 1,
+        "answer": 3,
+        "order": 1
+    }
+},
+{
+    "model": "polls.questionanswerm2m",
+    "pk": 4,
+    "fields": {
+        "question": 1,
+        "answer": 4,
+        "order": 4
+    }
+},
+{
+    "model": "polls.questionanswerm2m",
+    "pk": 5,
+    "fields": {
+        "question": 2,
+        "answer": 5,
+        "order": 2
+    }
+},
+{
+    "model": "polls.questionanswerm2m",
+    "pk": 6,
+    "fields": {
+        "question": 2,
+        "answer": 6,
+        "order": 3
+    }
+},
+{
+    "model": "polls.questionanswerm2m",
+    "pk": 7,
+    "fields": {
+        "question": 2,
+        "answer": 7,
+        "order": 1
+    }
+},
+{
+    "model": "polls.questionanswerm2m",
+    "pk": 8,
+    "fields": {
+        "question": 4,
+        "answer": 8,
+        "order": 1
+    }
+},
+{
+    "model": "polls.questionanswerm2m",
+    "pk": 9,
+    "fields": {
+        "question": 4,
+        "answer": 9,
+        "order": 2
+    }
+},
+{
+    "model": "polls.questionanswerm2m",
+    "pk": 10,
+    "fields": {
+        "question": 4,
+        "answer": 10,
+        "order": 3
+    }
+},
+{
+    "model": "polls.questionanswerm2m",
+    "pk": 11,
+    "fields": {
+        "question": 4,
+        "answer": 11,
+        "order": 4
+    }
+},
+{
+    "model": "polls.pollquestionm2m",
+    "pk": 1,
+    "fields": {
+        "poll": 1,
+        "question": 1,
+        "order": 1
+    }
+},
+{
+    "model": "polls.pollquestionm2m",
+    "pk": 2,
+    "fields": {
+        "poll": 1,
+        "question": 2,
+        "order": 2
+    }
+},
+{
+    "model": "polls.pollquestionm2m",
+    "pk": 3,
+    "fields": {
+        "poll": 2,
+        "question": 3,
+        "order": 1
+    }
+},
+{
+    "model": "polls.pollquestionm2m",
+    "pk": 4,
+    "fields": {
+        "poll": 2,
+        "question": 4,
+        "order": 2
+    }
+}
+]
