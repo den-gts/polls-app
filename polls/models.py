@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.core.exceptions import ObjectDoesNotExist
 
 
 class Answer(models.Model):
@@ -59,6 +60,8 @@ class Session(models.Model):
 
     @property
     def next_question(self) -> Question | None:
+        if not self.current_question:
+            return None
         current_index = PollQuestionM2m.objects.get(
             poll = self.poll,
             question=self.current_question
