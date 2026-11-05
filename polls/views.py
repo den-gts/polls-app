@@ -57,7 +57,7 @@ class AnswerViewSet(mixins.CreateModelMixin, GenericViewSet):
 
         # А может быть это надо было в сериализатор в validate? Ну такое...
         if text and question.allow_custom:
-            answer = polls.models.Answer.objects.create(text=text)
+            answer, _ = polls.models.Answer.objects.get_or_create(text=text)
         else:
             answer = serializer.validated_data['answer']
 

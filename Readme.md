@@ -63,3 +63,24 @@ docker compose up -d
 docker compose cp dump.json backend:/tmp/dump.json
 docker compose exec backend uv run python manage.py loaddata /tmp/dump.json
 ```
+
+# Описание ednpoint'ов
+
+### GET /polls
+
+Список всех доступных для прохождения опросов. Пройденный опросы сюда не входят. Если у сессии прохождения нет
+current_question, то считаем сессию завершенной.
+
+### GET /polls/<poll_id>/
+
+Всегда редиректить на текущий вопрос в сессии прохождения - /polls/<poll_pk>/question/<current_question_pk>
+
+### GET /polls/<poll_pk>/question/<question_pk>/
+
+Возвращает данные по вопросу: Текст, допустимые варианты ответов и поддерживает ли вопрос, кастомный ответ пользователя.
+
+### POST /polls/<poll_pk>/question/<question_ok>/answer/
+
+Принимает в теле запроса {answer: <answer_pk>} или {text: 'кастомный текст ответа пользователя'} и сохраняет ответ пользователя.
+В случае кастомного ответа, создается новый экземпляр ответа пользователя. Так же если еще нет экземпляра сессии 
+прохождения, она создается тут же.
